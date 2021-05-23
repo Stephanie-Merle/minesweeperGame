@@ -8,65 +8,6 @@ const Board = ({ num, setMessage, counter, setCounter, boardLength }) => {
     const [bombs, setBombs] = useState([]); // Positions of the randomly positioned bombs
     const [found, setFound] = useState(0); // Check how many bombs are found (marked correctly)
 
-    /* INIT the board with bombs */
-    useEffect(() => {
-
-        // restart initial state
-        setBombs([])
-        setFound(0)
-        setMessage("Right click to mark bombs position (Ctrl + click on mac)")
-        setState(null)
-        setClick(true)
-
-        // init board with the bombs
-        let row = [];
-        let myResult = [];
-        let result = {};
-        for (let i = 0; i < boardLength; i++) {
-            for (let j = 0; j < boardLength; j++) {
-                if (bombs.find(el => el.x === i && el.y === j)) {
-                    result = {
-                        x: i,
-                        y: j,
-                        bombs: true,
-                        count: 0,
-                        show: false,
-                        mark: false
-                    };
-                    row.push(result);
-                } else {
-                    result = {
-                        x: i,
-                        y: j,
-                        bombs: false,
-                        count: 0,
-                        show: false,
-                        mark: false
-                    };
-                    row.push(result);
-                }
-            }
-            myResult.push(row);
-            row = [];
-        }
-
-        setState(myResult)
-
-        // init random bombs positions
-        let bombsArray = []
-        for (let h = 0; h < num; h++) {
-            let bombX = Math.floor(Math.random() * boardLength);
-            let bombY = Math.floor(Math.random() * boardLength);
-            if (bombsArray.find(el => el.x === bombX && el.y === bombY)) {
-                num += 1;
-            } else {
-                bombsArray.push({ x: bombX, y: bombY });
-            }
-        }
-        setBombs(bombsArray)
-
-    }, [num, boardLength])
-
     // function to handle click on cases
     const handleClick = el => {
         let arr = [...state];
@@ -78,7 +19,7 @@ const Board = ({ num, setMessage, counter, setCounter, boardLength }) => {
 
         // handle end of game
         if (arr[el.x][el.y].bombs) {
-            winner();
+            checkIfUserWon();
             setMessage(`You lost!!!`);
             arr.map(el => el.map(e => (e.show = true)));
             setState(arr);
@@ -180,13 +121,72 @@ const Board = ({ num, setMessage, counter, setCounter, boardLength }) => {
             elem.map(el => (el.bombs && el.mark ? (num += 1) : null))
         );
         setFound(foundBombs);
-        if (found === num) {
+        if (foundBombs === num) {
             setMessage(`You WON!!! Congrats`);
             let arr = [...state];
             arr.map(el => el.map(e => (e.show = true)));
             setState(arr);
         }
     };
+
+    /* INIT the board with bombs */
+    useEffect(() => {
+
+        // restart initial state
+        setBombs([])
+        setFound(0)
+        setMessage("Right click to mark bombs position (Ctrl + click on mac)")
+        setState(null)
+        setClick(true)
+
+        // init board with the bombs
+        let row = [];
+        let myResult = [];
+        let result = {};
+        for (let i = 0; i < boardLength; i++) {
+            for (let j = 0; j < boardLength; j++) {
+                if (bombs.find(el => el.x === i && el.y === j)) {
+                    result = {
+                        x: i,
+                        y: j,
+                        bombs: true,
+                        count: 0,
+                        show: false,
+                        mark: false
+                    };
+                    row.push(result);
+                } else {
+                    result = {
+                        x: i,
+                        y: j,
+                        bombs: false,
+                        count: 0,
+                        show: false,
+                        mark: false
+                    };
+                    row.push(result);
+                }
+            }
+            myResult.push(row);
+            row = [];
+        }
+
+        setState(myResult)
+
+        // init random bombs positions
+        let bombsArray = []
+        for (let h = 0; h < num; h++) {
+            let bombX = Math.floor(Math.random() * boardLength);
+            let bombY = Math.floor(Math.random() * boardLength);
+            if (bombsArray.find(el => el.x === bombX && el.y === bombY)) {
+                num += 1;
+            } else {
+                bombsArray.push({ x: bombX, y: bombY });
+            }
+        }
+        setBombs(bombsArray)
+
+    }, [num, boardLength])
 
 
     return (

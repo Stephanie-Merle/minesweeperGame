@@ -29756,87 +29756,8 @@ var Board = function Board(_ref) {
       _useState8 = _slicedToArray(_useState7, 2),
       found = _useState8[0],
       setFound = _useState8[1]; // Check how many bombs are found (marked correctly)
+  // function to handle click on cases
 
-  /* INIT the board with bombs */
-
-
-  (0, _react.useEffect)(function () {
-    // restart initial state
-    setBombs([]);
-    setFound(0);
-    setMessage("Right click to mark bombs position (Ctrl + click on mac)");
-    setState(null);
-    setClick(true); // init board with the bombs
-
-    var row = [];
-    var myResult = [];
-    var result = {};
-
-    var _loop = function _loop(i) {
-      var _loop3 = function _loop3(j) {
-        if (bombs.find(function (el) {
-          return el.x === i && el.y === j;
-        })) {
-          result = {
-            x: i,
-            y: j,
-            bombs: true,
-            count: 0,
-            show: false,
-            mark: false
-          };
-          row.push(result);
-        } else {
-          result = {
-            x: i,
-            y: j,
-            bombs: false,
-            count: 0,
-            show: false,
-            mark: false
-          };
-          row.push(result);
-        }
-      };
-
-      for (var j = 0; j < boardLength; j++) {
-        _loop3(j);
-      }
-
-      myResult.push(row);
-      row = [];
-    };
-
-    for (var i = 0; i < boardLength; i++) {
-      _loop(i);
-    }
-
-    setState(myResult); // init random bombs positions
-
-    var bombsArray = [];
-
-    var _loop2 = function _loop2(h) {
-      var bombX = Math.floor(Math.random() * boardLength);
-      var bombY = Math.floor(Math.random() * boardLength);
-
-      if (bombsArray.find(function (el) {
-        return el.x === bombX && el.y === bombY;
-      })) {
-        num += 1;
-      } else {
-        bombsArray.push({
-          x: bombX,
-          y: bombY
-        });
-      }
-    };
-
-    for (var h = 0; h < num; h++) {
-      _loop2(h);
-    }
-
-    setBombs(bombsArray);
-  }, [num, boardLength]); // function to handle click on cases
 
   var handleClick = function handleClick(el) {
     var arr = _toConsumableArray(state);
@@ -29848,7 +29769,7 @@ var Board = function Board(_ref) {
 
 
     if (arr[el.x][el.y].bombs) {
-      winner();
+      checkIfUserWon();
       setMessage("You lost!!!");
       arr.map(function (el) {
         return el.map(function (e) {
@@ -29975,7 +29896,7 @@ var Board = function Board(_ref) {
     });
     setFound(foundBombs);
 
-    if (found === num) {
+    if (foundBombs === num) {
       setMessage("You WON!!! Congrats");
 
       var arr = _toConsumableArray(state);
@@ -29988,7 +29909,86 @@ var Board = function Board(_ref) {
       setState(arr);
     }
   };
+  /* INIT the board with bombs */
 
+
+  (0, _react.useEffect)(function () {
+    // restart initial state
+    setBombs([]);
+    setFound(0);
+    setMessage("Right click to mark bombs position (Ctrl + click on mac)");
+    setState(null);
+    setClick(true); // init board with the bombs
+
+    var row = [];
+    var myResult = [];
+    var result = {};
+
+    var _loop = function _loop(i) {
+      var _loop3 = function _loop3(j) {
+        if (bombs.find(function (el) {
+          return el.x === i && el.y === j;
+        })) {
+          result = {
+            x: i,
+            y: j,
+            bombs: true,
+            count: 0,
+            show: false,
+            mark: false
+          };
+          row.push(result);
+        } else {
+          result = {
+            x: i,
+            y: j,
+            bombs: false,
+            count: 0,
+            show: false,
+            mark: false
+          };
+          row.push(result);
+        }
+      };
+
+      for (var j = 0; j < boardLength; j++) {
+        _loop3(j);
+      }
+
+      myResult.push(row);
+      row = [];
+    };
+
+    for (var i = 0; i < boardLength; i++) {
+      _loop(i);
+    }
+
+    setState(myResult); // init random bombs positions
+
+    var bombsArray = [];
+
+    var _loop2 = function _loop2(h) {
+      var bombX = Math.floor(Math.random() * boardLength);
+      var bombY = Math.floor(Math.random() * boardLength);
+
+      if (bombsArray.find(function (el) {
+        return el.x === bombX && el.y === bombY;
+      })) {
+        num += 1;
+      } else {
+        bombsArray.push({
+          x: bombX,
+          y: bombY
+        });
+      }
+    };
+
+    for (var h = 0; h < num; h++) {
+      _loop2(h);
+    }
+
+    setBombs(bombsArray);
+  }, [num, boardLength]);
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "board"
   }, /*#__PURE__*/_react.default.createElement("ul", null, state && state.map(function (el, index) {
@@ -30172,7 +30172,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60390" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60665" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
