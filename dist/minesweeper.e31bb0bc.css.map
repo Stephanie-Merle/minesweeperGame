@@ -1,0 +1,1 @@
+{"version":3,"sources":["App.scss"],"names":[],"mappings":"AACI;EACI","file":"minesweeper.e31bb0bc.css","sourceRoot":"..","sourcesContent":["body{\n    & h1{\n        color: red;\n    }\n}"]}
