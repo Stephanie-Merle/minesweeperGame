@@ -101,13 +101,14 @@ body {
 	height: 50px;
   }
   .hidden:hover {
-	background-image: url(./assets//clicker.svg);
+	background-image: url(./assets/clicker.svg);
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: 1.8em;
   }
   .bomb {
-	background-image: url(./assets//alert.svg);
+	background-image: url(./assets/bomb.png);
+	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
 	background-color: #56b48c;

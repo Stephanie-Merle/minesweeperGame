@@ -3,65 +3,10 @@ import Cell from "./Cell"
 
 const Board = ({ num, setMessage, counter, setCounter, boardLength }) => {
 
-    const [state, setState] = useState(null);
-    const [first, setClick] = useState(true);
-    const [bombs, setBombs] = useState([]);
-    const [found, setFound] = useState(0);
-
-
-    // function to handle click on cases
-    const handleClick = el => {
-        let arr = [...state];
-        console.log(arr)
-
-        if (first) {
-            firstClick();
-            setClick(false);
-        }
-
-        // handle end of game
-        if (arr[el.x][el.y].bombs) {
-            winner();
-            setMessage(`You lost!!! You found ${found} bomb(s)`);
-            arr.map(el => el.map(e => (e.show = true)));
-            setState(arr);
-        }
-        // handle empty cell with callback
-        else if (arr[el.x][el.y].show === false && arr[el.x][el.y].count === 0) {
-            arr[el.x][el.y].show = true;
-            toggleShow(el.x, el.y);
-            // handle cell with count > 0 without callback
-        } else if (arr[el.x][el.y].show === false && arr[el.x][el.y].count > 0) {
-            arr[el.x][el.y].show = true;
-            setState(arr);
-        }
-    };
-
-    const toggleShow = (a, b) => {
-        if (a > 0) {
-            check(a - 1, b);
-        }
-        if (b > 0) {
-            check(a, b - 1);
-        }
-        if (b < (boardLength - 1)) {
-            check(a, b + 1);
-        }
-        if (a < (boardLength - 1)) {
-            check(a + 1, b);
-        }
-    };
-
-    const check = (a, b) => {
-        let arr = [...state];
-        if (arr[a][b].count === 0 && arr[a][b].show === false) {
-            arr[a][b].show = true;
-            return toggleShow(a, b);
-        } else {
-            arr[a][b].show = true;
-            setState(arr);
-        }
-    };
+    const [state, setState] = useState(null); // Board state, each array inside is one line of the board
+    const [first, setClick] = useState(true); // Check ifd first click
+    const [bombs, setBombs] = useState([]); // Positions of the randomly positioned bombs
+    const [found, setFound] = useState(0); // Check how many bombs are found (marked correctly)
 
     /* INIT the board with bombs */
     useEffect(() => {
@@ -104,7 +49,7 @@ const Board = ({ num, setMessage, counter, setCounter, boardLength }) => {
             myResult.push(row);
             row = [];
         }
-        console.log(myResult)
+
         setState(myResult)
 
         // init random bombs positions
@@ -120,17 +65,67 @@ const Board = ({ num, setMessage, counter, setCounter, boardLength }) => {
         }
         setBombs(bombsArray)
 
-
-
     }, [num, boardLength])
 
+    // function to handle click on cases
+    const handleClick = el => {
+        let arr = [...state];
 
+        if (first) {
+            firstClick();
+            setClick(false);
+        }
 
+        // handle end of game
+        if (arr[el.x][el.y].bombs) {
+            winner();
+            setMessage(`You lost!!!`);
+            arr.map(el => el.map(e => (e.show = true)));
+            setState(arr);
+        }
+        // handle empty cell with callback
+        else if (arr[el.x][el.y].show === false && arr[el.x][el.y].count === 0) {
+            arr[el.x][el.y].show = true;
+            toggleShow(el.x, el.y);
+            // handle cell with count > 0 without callback
+        } else if (arr[el.x][el.y].show === false && arr[el.x][el.y].count > 0) {
+            arr[el.x][el.y].show = true;
+            setState(arr);
+        }
+    };
 
+    // Check all adjoining cases 
+    const toggleShow = (a, b) => {
+        if (a > 0) {
+            check(a - 1, b);
+        }
+        if (b > 0) {
+            check(a, b - 1);
+        }
+        if (b < (boardLength - 1)) {
+            check(a, b + 1);
+        }
+        if (a < (boardLength - 1)) {
+            check(a + 1, b);
+        }
+    };
 
+    // Reveal new case
+    const check = (a, b) => {
+        let arr = [...state];
+        if (arr[a][b].count === 0 && arr[a][b].show === false) {
+            arr[a][b].show = true;
+            return toggleShow(a, b);
+        } else {
+            arr[a][b].show = true;
+            setState(arr);
+        }
+    };
+
+    // return case bombs count 
     const counting = (a, b) => {
         let arr = [...state];
-        console.log(arr, a - 1, b)
+
         if (a > 0) {
             arr[a - 1][b].count += 1;
         }
@@ -159,12 +154,11 @@ const Board = ({ num, setMessage, counter, setCounter, boardLength }) => {
 
     const firstClick = () => {
         let arr = [...state];
-        console.log("firstClick", arr)
-
         bombs.map(el => (arr[el.x][el.y].bombs = true));
         bombs.map(el => counting(el.x, el.y));
     };
 
+    // Handle case bomb marking
     const rightClick = (e, el) => {
         e.preventDefault();
         let arr = [...state];
@@ -175,16 +169,17 @@ const Board = ({ num, setMessage, counter, setCounter, boardLength }) => {
         } else {
             setCounter(counter - 1);
         }
-        winner();
+        checkIfUserWon();
         setState(arr);
     };
 
-    const winner = () => {
-        let founded = 0;
+    // Check if the user won for every new mark
+    const checkIfUserWon = () => {
+        let foundBombs = 0;
         state.map(elem =>
             elem.map(el => (el.bombs && el.mark ? (num += 1) : null))
         );
-        setFound(founded);
+        setFound(foundBombs);
         if (found === num) {
             setMessage(`You WON!!! Congrats`);
             let arr = [...state];

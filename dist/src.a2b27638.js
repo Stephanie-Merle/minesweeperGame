@@ -29638,7 +29638,7 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"./assets/clicker.svg":[["clicker.7be2403c.svg","src/assets/clicker.svg"],"src/assets/clicker.svg"],"./assets/alert.svg":[["alert.789686a6.svg","src/assets/alert.svg"],"src/assets/alert.svg"],"./assets/one.svg":[["one.328052c3.svg","src/assets/one.svg"],"src/assets/one.svg"],"./assets/two.svg":[["two.14f19255.svg","src/assets/two.svg"],"src/assets/two.svg"],"./assets/three.svg":[["three.24d39b56.svg","src/assets/three.svg"],"src/assets/three.svg"],"./assets/four.svg":[["four.761408b9.svg","src/assets/four.svg"],"src/assets/four.svg"],"./assets/five.svg":[["five.d05bbcfd.svg","src/assets/five.svg"],"src/assets/five.svg"],"./assets/six.svg":[["six.c599840c.svg","src/assets/six.svg"],"src/assets/six.svg"],"./assets/seven.svg":[["seven.e36ef736.svg","src/assets/seven.svg"],"src/assets/seven.svg"],"./assets/eight.svg":[["eight.57e25a29.svg","src/assets/eight.svg"],"src/assets/eight.svg"],"./assets/flag.svg":[["flag.55045753.svg","src/assets/flag.svg"],"src/assets/flag.svg"],"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Cell.js":[function(require,module,exports) {
+},{"./assets/clicker.svg":[["clicker.7be2403c.svg","src/assets/clicker.svg"],"src/assets/clicker.svg"],"./assets/bomb.png":[["bomb.e55927b6.png","src/assets/bomb.png"],"src/assets/bomb.png"],"./assets/one.svg":[["one.328052c3.svg","src/assets/one.svg"],"src/assets/one.svg"],"./assets/two.svg":[["two.14f19255.svg","src/assets/two.svg"],"src/assets/two.svg"],"./assets/three.svg":[["three.24d39b56.svg","src/assets/three.svg"],"src/assets/three.svg"],"./assets/four.svg":[["four.761408b9.svg","src/assets/four.svg"],"src/assets/four.svg"],"./assets/five.svg":[["five.d05bbcfd.svg","src/assets/five.svg"],"src/assets/five.svg"],"./assets/six.svg":[["six.c599840c.svg","src/assets/six.svg"],"src/assets/six.svg"],"./assets/seven.svg":[["seven.e36ef736.svg","src/assets/seven.svg"],"src/assets/seven.svg"],"./assets/eight.svg":[["eight.57e25a29.svg","src/assets/eight.svg"],"src/assets/eight.svg"],"./assets/flag.svg":[["flag.55045753.svg","src/assets/flag.svg"],"src/assets/flag.svg"],"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/Cell.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29737,83 +29737,26 @@ var Board = function Board(_ref) {
   var _useState = (0, _react.useState)(null),
       _useState2 = _slicedToArray(_useState, 2),
       state = _useState2[0],
-      setState = _useState2[1];
+      setState = _useState2[1]; // Board state, each array inside is one line of the board
+
 
   var _useState3 = (0, _react.useState)(true),
       _useState4 = _slicedToArray(_useState3, 2),
       first = _useState4[0],
-      setClick = _useState4[1];
+      setClick = _useState4[1]; // Check ifd first click
+
 
   var _useState5 = (0, _react.useState)([]),
       _useState6 = _slicedToArray(_useState5, 2),
       bombs = _useState6[0],
-      setBombs = _useState6[1];
+      setBombs = _useState6[1]; // Positions of the randomly positioned bombs
+
 
   var _useState7 = (0, _react.useState)(0),
       _useState8 = _slicedToArray(_useState7, 2),
       found = _useState8[0],
-      setFound = _useState8[1]; // function to handle click on cases
+      setFound = _useState8[1]; // Check how many bombs are found (marked correctly)
 
-
-  var handleClick = function handleClick(el) {
-    var arr = _toConsumableArray(state);
-
-    console.log(arr);
-
-    if (first) {
-      firstClick();
-      setClick(false);
-    } // handle end of game
-
-
-    if (arr[el.x][el.y].bombs) {
-      winner();
-      setMessage("You lost!!! You found ".concat(found, " bomb(s)"));
-      arr.map(function (el) {
-        return el.map(function (e) {
-          return e.show = true;
-        });
-      });
-      setState(arr);
-    } // handle empty cell with callback
-    else if (arr[el.x][el.y].show === false && arr[el.x][el.y].count === 0) {
-        arr[el.x][el.y].show = true;
-        toggleShow(el.x, el.y); // handle cell with count > 0 without callback
-      } else if (arr[el.x][el.y].show === false && arr[el.x][el.y].count > 0) {
-        arr[el.x][el.y].show = true;
-        setState(arr);
-      }
-  };
-
-  var toggleShow = function toggleShow(a, b) {
-    if (a > 0) {
-      check(a - 1, b);
-    }
-
-    if (b > 0) {
-      check(a, b - 1);
-    }
-
-    if (b < boardLength - 1) {
-      check(a, b + 1);
-    }
-
-    if (a < boardLength - 1) {
-      check(a + 1, b);
-    }
-  };
-
-  var check = function check(a, b) {
-    var arr = _toConsumableArray(state);
-
-    if (arr[a][b].count === 0 && arr[a][b].show === false) {
-      arr[a][b].show = true;
-      return toggleShow(a, b);
-    } else {
-      arr[a][b].show = true;
-      setState(arr);
-    }
-  };
   /* INIT the board with bombs */
 
 
@@ -29868,7 +29811,6 @@ var Board = function Board(_ref) {
       _loop(i);
     }
 
-    console.log(myResult);
     setState(myResult); // init random bombs positions
 
     var bombsArray = [];
@@ -29894,12 +29836,71 @@ var Board = function Board(_ref) {
     }
 
     setBombs(bombsArray);
-  }, [num, boardLength]);
+  }, [num, boardLength]); // function to handle click on cases
+
+  var handleClick = function handleClick(el) {
+    var arr = _toConsumableArray(state);
+
+    if (first) {
+      firstClick();
+      setClick(false);
+    } // handle end of game
+
+
+    if (arr[el.x][el.y].bombs) {
+      winner();
+      setMessage("You lost!!!");
+      arr.map(function (el) {
+        return el.map(function (e) {
+          return e.show = true;
+        });
+      });
+      setState(arr);
+    } // handle empty cell with callback
+    else if (arr[el.x][el.y].show === false && arr[el.x][el.y].count === 0) {
+        arr[el.x][el.y].show = true;
+        toggleShow(el.x, el.y); // handle cell with count > 0 without callback
+      } else if (arr[el.x][el.y].show === false && arr[el.x][el.y].count > 0) {
+        arr[el.x][el.y].show = true;
+        setState(arr);
+      }
+  }; // Check all adjoining cases 
+
+
+  var toggleShow = function toggleShow(a, b) {
+    if (a > 0) {
+      check(a - 1, b);
+    }
+
+    if (b > 0) {
+      check(a, b - 1);
+    }
+
+    if (b < boardLength - 1) {
+      check(a, b + 1);
+    }
+
+    if (a < boardLength - 1) {
+      check(a + 1, b);
+    }
+  }; // Reveal new case
+
+
+  var check = function check(a, b) {
+    var arr = _toConsumableArray(state);
+
+    if (arr[a][b].count === 0 && arr[a][b].show === false) {
+      arr[a][b].show = true;
+      return toggleShow(a, b);
+    } else {
+      arr[a][b].show = true;
+      setState(arr);
+    }
+  }; // return case bombs count 
+
 
   var counting = function counting(a, b) {
     var arr = _toConsumableArray(state);
-
-    console.log(arr, a - 1, b);
 
     if (a > 0) {
       arr[a - 1][b].count += 1;
@@ -29937,14 +29938,14 @@ var Board = function Board(_ref) {
   var firstClick = function firstClick() {
     var arr = _toConsumableArray(state);
 
-    console.log("firstClick", arr);
     bombs.map(function (el) {
       return arr[el.x][el.y].bombs = true;
     });
     bombs.map(function (el) {
       return counting(el.x, el.y);
     });
-  };
+  }; // Handle case bomb marking
+
 
   var rightClick = function rightClick(e, el) {
     e.preventDefault();
@@ -29960,18 +29961,19 @@ var Board = function Board(_ref) {
       setCounter(counter - 1);
     }
 
-    winner();
+    checkIfUserWon();
     setState(arr);
-  };
+  }; // Check if the user won for every new mark
 
-  var winner = function winner() {
-    var founded = 0;
+
+  var checkIfUserWon = function checkIfUserWon() {
+    var foundBombs = 0;
     state.map(function (elem) {
       return elem.map(function (el) {
         return el.bombs && el.mark ? num += 1 : null;
       });
     });
-    setFound(founded);
+    setFound(foundBombs);
 
     if (found === num) {
       setMessage("You WON!!! Congrats");
@@ -30170,7 +30172,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59996" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60390" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

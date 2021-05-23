@@ -112,7 +112,8 @@ li div {
 }
 
 .bomb {
-  background-image: url(/alert.789686a6.svg);
+  background-image: url(/bomb.e55927b6.png);
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   background-color: #56b48c;
